@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Flask Web Socket Example</title>
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/socket.io.js"></script>
+    <script type="text/javascript">
+        var socket = io();
+
+        socket.on('connect', function() {
+            console.log("Connected to Server");
+            $("#connected").html("Yes");
+        });
+
+        socket.on('disconnect', function() {
+            console.log("Disconnected from the Server");
+            $("#connected").html("No");
+        });
+        socket.on('pedestrian', function() {
+            console.log("pedestrian is crossing stop!");
+            $("input[type=button]").val("pedestrian crossing stop!");
+        });
+        socket.on('blink', function(data) {
+            console.log("blinking");
+            socket.emit('blink', data)
+        });
+        socket.on('message', function(data) {
+            console.log(data)
+        });
+        $(document).ready(function(){
+            $("input[type=button].pedestrian").click(function(){
+                console.log("pedestrian is crossing");
+                socket.emit('pedestrian');
+            });
+            $("input[type=button].joinMainStreet").click(function(){
+                // The plateNo should be taken as an input but done this way for simplicity
+                data = {'room' : "1153", 'plateNo' : "ABC012", 'destination' : "main street"}
+                socket.emit('join', data);    // 1153 is the room number for main street
+                console.log("ABC012 joined the main street room");
+            });
+            $("input[type=button].joinSideStreetRoom").click(function(){
+                // The plateNo should be taken as an input but done this way for simplicity
+                data = {'room' : "1154", 'plateNo' : "ABC016", 'destination' : "side street"}
+                socket.emit('join', data);    // 1154 is the room number for side street
+                console.log("ABC016 joined the side street room");
+            });
+            $("input[type=button].leaveMainStreet").click(function(){
+                // The plateNo should be taken as an input but done this way for simplicity
+                data = {'room' : "1153", 'plateNo' : "ABC012", 'destination' : "main street"}
+                socket.emit('leave', data);    // 1153 is the room number for main street
+                console.log("ABC012 left the main street room");
+            });
+            $("input[type=button].leaveSideStreet").click(function(){
+                // The plateNo should be taken as an input but done this way for simplicity
+                data = {'room' : "1154", 'plateNo' : "ABC016", 'destination' : "sideStreet"}
+                socket.emit('leave', data);    // 1154 is the room number for side street
+                console.log("ABC016 left the side street room");
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Traffic Lights Using Flask_Restful_API</h1>
+    LED is connected to GPIO {{pin}}<br>
+    Connected to server: <span id="connected">No</span><br>
+    Join main street room: <span id="joinMainStreet"></span><br>
+    <input type="button" value="join" class="joinMainStreet"><br>
+    Join side street room: <span id="joinSideStreet"></span><br>
+    <input type="button" value="join" class="joinSideStreet"><br>
+    leave main street room: <span id="leaveMainStreet"></span><br>
+    <input type="button" value="leave" class="leaveMainStreet"><br>
+    leave side street room: <span id="leaveSideStreet"></span><br>
+    <input type="button" value="leave" class="leaveSideStreet"><br>
+    Pedestrian: <span id="pedestrian"></span><br>
+    <input type="button" value="Stop" class="pedestrian"><br>
+</body>
+</html>

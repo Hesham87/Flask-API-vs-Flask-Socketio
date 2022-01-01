@@ -1,0 +1,69 @@
+<!DOCType html>
+<html>
+<head>
+    <title>Traffic Lights Using Flask_Restful_API</title>
+    <script src= "/static/jquery.min.js"></script>
+    <script type="text/javascript">
+    function getMainLed(){
+        $.get("/mainTraffic",function(serverResponse, status){
+             	console.log(serverResponse)
+	     	updateMainButton(serverResponse)
+        })
+    }
+    function getSideLed(){
+        $.get("/sideTraffic",function(serverResponse, status){
+		console.log(serverResponse)
+		updateSideButton(serverResponse)
+        })
+    }
+    function postSideLed(){
+	$.post("/sideTraffic", function(serverResponse, status){
+	    	console.log(serverResponse)
+	    	updateSideButton(serverResponse)
+	})
+    }
+    function postMainLed(){
+	$.post("/mainTraffic", function(serverResponse, status){
+		console.log(serverResponse)
+		updateMainButton(serverResponse)
+	})
+    }
+    function postPedestrian(){
+        $.post("/pedestrian",function(serverResponse, status){
+            	console.log(serverResponse)
+            	updateMainButton(serverResponse);
+            	updateSideButton(serverResponse);
+        })
+    }
+    function updateMainButton(data){
+        $("input[type=text].mainTrafficLight").val(data.mainLED);
+        $("#mainTrafficLight").html(data.mainLED);
+    }
+    function updateSideButton(data){
+        $("input[type=text].sideTrafficLight").val(data.sideLED);
+        $("#sideTrafficLight").text(data.sideLED)
+    }
+    $(document).ready(function(){
+        $("input[type=button].pedestrian").click(function(){
+            postPedestrian();
+        });
+	$("input[type=button].sideTrafficLight").click(function(){
+	    postSideLed();
+	});
+	$("input[type=button].mainTrafficLight").click(function(){
+	    postMainLed();
+	})
+    });
+    </script>
+</head>
+<body>
+    <h1>Traffic Lights Using Flask_Restful_API</h1>
+    LED is connected to GPIO {{pin}}<br>
+    Main street red led state: <span id="mainTrafficLight"></span><br>
+    <input type="button" value="False" class="mainTrafficLight"><br>
+    Side street red led state: <span id="sideTrafficLight"></span><br>
+    <input type="button" value="True" class="sideTrafficLight"><br>
+    Pedestrian: <span id="pedestrian"></span><br>
+    <input type="button" value="Stop" class="pedestrian"><br>
+</body>
+</html>
