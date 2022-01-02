@@ -38,7 +38,7 @@
                 socket.emit('join', data);    // 1153 is the room number for main street
                 console.log("ABC012 joined the main street room");
             });
-            $("input[type=button].joinSideStreetRoom").click(function(){
+            $("input[type=button].joinSideStreet").click(function(){
                 // The plateNo should be taken as an input but done this way for simplicity
                 data = {'room' : "1154", 'plateNo' : "ABC016", 'destination' : "side street"}
                 socket.emit('join', data);    // 1154 is the room number for side street
